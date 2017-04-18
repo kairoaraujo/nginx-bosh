@@ -1,0 +1,29 @@
+#!/bin/sh
+
+RUN_DIR=/var/vcap/sys/run/nginx
+LOG_DIR=/var/vcap/sys/log/nginx
+PIDFILE=${RUN_DIR}/pid
+CONFIG_FILE=/var/vcap/jobs/nginx/etc/nginx.conf
+
+case $1 in
+
+    start)
+        mkdir -p $RUN_DIR $LOG_DIR
+        chown -R vcap:vcap $RUN_DIR $LOG_DIR
+        echo $$ > $PIDFILE
+        cd /var/vcap/packages/nginx
+        export PATH=$PATH:/var/vcap/packages/nginx/bin
+
+        exec /var/vcap/packages/nginx/sbin/nginx -g "pid $PIDFILE" -c $CONFIG_FILE
+
+        ;;
+
+    stop)
+        kill -9 `cat $PIDFILE`
+        rm -f $PIDFILE
+        ;;
+
+    *)
+        echo "Usage: ctl {start|stop}"
+        ;;
+esac

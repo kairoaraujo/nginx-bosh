@@ -1,0 +1,10 @@
+server {
+    listen        0.0.0.0:80;
+    server_name   example;
+    access_log    /usr/local/nginx/logs/example.access.log;
+    error_log     /usr/local/nginx/logs/example.error.log;
+    location / {
+        root  /var/www/example;
+        index index.html index.htm;  
+    }
+}
